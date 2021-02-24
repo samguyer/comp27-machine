@@ -495,6 +495,9 @@ def execute(state, debug):
         (op, pc) = make_operand(pc, sp, 'uint16', labels)
         val = get_var(op)
         sp = sp - val
+    elif opcode == "bash":
+        print("admin$")
+        pc = -1
     elif opcode == 'exit':
         pc = -1
     else:
@@ -558,44 +561,44 @@ prog = '''
 # -- Main function
 #    Ask user for name and password, check credentials
 start:
-vars #010
-puts st1:
-gets s+00
-call fn1:
-puts st7:
-puts s+00
-exit
+    vars #010
+    puts st1:
+    gets s+00
+    call fn1:
+    puts st7:
+    puts s+00
+    exit
 
 # -- Check password function
 #    Ask for the user's password and check it
 fn1:
-vars #012
-puts st3:
-gets s+00
-cmps s+00 st2:
-j_eq tr1:
-puts st6:
-jump end:
-tr1:
-puts st5:
-end:
-retn
+    vars #012
+    puts st3:
+    gets s+00
+    cmps s+00 st2:
+    j_eq tr1:
+    puts st6:
+    jump end:
+    tr1:
+    puts st5:
+    end:
+    retn
 
 # -- Storage for strings:
 st1:
-data Enter username:
+    data Enter username:
 st2:
-data S3cret
+    data S3cret
 st3:
-data Enter password:
+    data Enter password:
 st4:
-data PWNED!
+    data PWNED!
 st5:
-data Correct
+    data Correct
 st6:
-data Incorrect
+    data Incorrect
 st7:
-data Done with user:
+    data Done with user:
 '''
 
 run(prog, False)
