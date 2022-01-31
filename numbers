@@ -1,0 +1,14 @@
+start:
+    movb @300, #99
+
+    puts "Read uint16 from uint8"
+    putw @300
+
+    movw @302, #99
+    puts "Read uint16 from uint16"
+    putw @302
+    puts "Read uint8 from uint16"
+    movb @304, @302
+    putb @304
+
+    exit

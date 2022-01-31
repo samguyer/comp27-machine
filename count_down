@@ -1,0 +1,13 @@
+start:
+    puts "Enter countdown start: "
+    getb @302
+    movb @300, @302
+loop:
+    cmpb @300, #0
+    j_eq end
+    putb @300
+    subb @300, @300, #1
+    jump loop
+end:
+    puts "Blast off!"
+    exit

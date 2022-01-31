@@ -1,0 +1,9 @@
+start:
+    puts "Enter first number: "
+    getb @300
+    puts "Enter second number: "
+    getb @301
+    addb @302, @300, @301
+    puts "Total: "
+    putb @302
+    exit

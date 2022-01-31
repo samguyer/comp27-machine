@@ -1,0 +1,17 @@
+start:
+    movb @300, #87
+loop:
+    puts "Guess: "
+    getb @301
+    cmpb @301, @300
+    j_eq win
+    j_lt toolow
+toohigh:
+    puts "Too high"
+    jump loop
+toolow:
+    puts "Too low"
+    jump loop
+win:
+    puts "You got it!"
+    exit
