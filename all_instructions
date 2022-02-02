@@ -1,0 +1,45 @@
+# -- Options for 'X' in instructions below (i.e., the type)
+b    unsigned 8-bit integer
+w    unsigned 16-bit integer (word)
+i    signed 8-bit integer
+l    signed 16-bit (long) integer
+
+# -- Operands
+@address
+#constant
+
+# -- Copy a value from source to destination
+#    Src can be a constant; dest must be an address
+movX    dest, src
+
+# -- Calculate: dest = src1 op src2
+#    Src1 and/or src2 can be constants; dest must be an address
+addX    dest, src1, src2
+subX    dest, src1, src2
+mulX    dest, src1, src2
+divX    dest, src1, src2
+
+# -- Label the next instruction
+label:
+
+# -- Compare values
+cmpX    src1, src2
+
+# -- Jump if the given condition was true at the last compare instruction
+j_eq    label
+j_ne    label
+j_lt    label
+j_gt    label
+
+# -- Unconditional jump
+jump    label
+
+# -- Read a value from the user
+getX    dest
+
+# -- Print a value to the screen
+putX    src
+
+# -- Read or print a string (null terminated)
+gets    dest
+puts    “message”
