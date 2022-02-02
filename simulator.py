@@ -439,6 +439,28 @@ def execute(state):
             cflag = -1
         else:
             cflag = 1
+    elif opcode == 'cmpi':
+        (op1, pc) = make_operand(pc, sp, 'sint8')
+        (op2, pc) = make_operand(pc, sp, 'sint8')
+        v1 = get_var(op1)
+        v2 = get_var(op2)
+        if v1 == v2:
+            cflag = 0
+        elif v1 < v2:
+            cflag = -1
+        else:
+            cflag = 1
+    elif opcode == 'cmpl':
+        (op1, pc) = make_operand(pc, sp, 'sint16')
+        (op2, pc) = make_operand(pc, sp, 'sint16')
+        v1 = get_var(op1)
+        v2 = get_var(op2)
+        if v1 == v2:
+            cflag = 0
+        elif v1 < v2:
+            cflag = -1
+        else:
+            cflag = 1
     elif opcode == 'cmps':
         (op1, pc) = make_operand(pc, sp, 'str')
         (op2, pc) = make_operand(pc, sp, 'str')
@@ -480,6 +502,22 @@ def execute(state):
         print(v)
     elif opcode == 'getw':
         (op, pc) = make_operand(pc, sp, 'uint16')
+        v = int(input('?'))
+        set_var(op, v)
+    elif opcode == 'puti':
+        (op, pc) = make_operand(pc, sp, 'sint8')
+        v = get_var(op)
+        print(v)
+    elif opcode == 'geti':
+        (op, pc) = make_operand(pc, sp, 'sint8')
+        v = int(input('?'))
+        set_var(op, v)
+    elif opcode == 'putl':
+        (op, pc) = make_operand(pc, sp, 'sint16')
+        v = get_var(op)
+        print(v)
+    elif opcode == 'getl':
+        (op, pc) = make_operand(pc, sp, 'sint16')
         v = int(input('?'))
         set_var(op, v)
     elif opcode == 'puts':

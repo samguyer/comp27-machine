@@ -1,0 +1,29 @@
+# Variables
+#   300: Upper limit
+#   302: 16-bit counter
+#   304: 8-bit signed counter
+#   305: 8-bit unsigned counter
+start:
+    puts "Enter upper limit: "
+    getw @300
+    movw @302, #0
+    movb @304, #0
+    movb @305, #0
+loop:
+    puts "------------------"
+    puts "16-bit counter:"
+    putw @302
+    puts "8-bit signed:"
+    puti @304
+    puts "8-bit unsigned:"
+    putb @305
+
+    cmpw @302, @300
+    j_eq end
+
+    addw @302, @302, #1
+    addb @304, @304, #1
+    addb @305, @305, #1
+    jump loop
+end:
+exit

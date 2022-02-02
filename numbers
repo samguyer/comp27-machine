@@ -1,14 +1,15 @@
+# Store an 8-bit integer at @300
+# Store a 16-bit integer at @302
 start:
-    movb @300, #99
+    puts "Enter an 8-bit integer: "
+    getb @300
+    puts "Enter a 16-bit integer: "
+    getw @302
 
-    puts "Read uint16 from uint8"
+    puts "8-bit as 16-bit: "
     putw @300
 
-    movw @302, #99
-    puts "Read uint16 from uint16"
-    putw @302
-    puts "Read uint8 from uint16"
-    movb @304, @302
-    putb @304
+    puts "16-bit as 8-bit: "
+    putb @302
 
     exit
