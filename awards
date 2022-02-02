@@ -1,14 +1,14 @@
 # Variables:
-# 300: max award (500)
-# 302: final award
-# 304: points
-# 306: calculated award
+#   300: max award (500)
+#   302: final award
+#   304: points
+#   306: calculated award
 # award = points * 4
 
 start:
     movw  @300, #500
     puts  "Enter number of points: "
-    getl  @304
+    getw  @304
     mulw  @306, @304, #4
     cmpl  @306, @300
     j_lt  under
