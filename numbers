@@ -1,15 +1,20 @@
 # Store an 8-bit integer at @300
 # Store a 16-bit integer at @302
 start:
-    puts "Enter an 8-bit integer: "
+    puts "Enter two 8-bit values: "
     getb @300
+    getb @301
+
+    puts "As 16-bit integer: "
+    putw @300
+
     puts "Enter a 16-bit integer: "
     getw @302
 
-    puts "8-bit as 16-bit: "
-    putw @300
-
-    puts "16-bit as 8-bit: "
+    puts "First byte: "
     putb @302
+
+    puts "Second byte: "
+    putb @303
 
     exit
