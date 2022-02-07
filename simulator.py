@@ -4,16 +4,16 @@ from enum import Enum
 ShowProgram = False
 ShowSteps = False
 ShowMemoryOps = False
-ShowMemory = True
+ShowMemory = False
 
 # -- Memory representation
 #    Memory is a sequence of bytes. The address of a byte is its
 #    index in that sequence. That's it!
-Size = 350
+Size = 500
 Text = 10
-Data = 200
 Variables = 300
 Stack = 350
+Data = 400
 Memory = [0 for _ in range(Size)]
 
 
@@ -68,7 +68,7 @@ def show_memory(when):
 #    Raise a 'Segmentation fault' error if the address is outside
 #    the legal range for the memory
 def load_byte(address):
-    if address >= Size or address < 0:
+    if address >= Data or address < 0:
         print("Seg fault: improper access at address {}".format(address))
         show_memory("at error")
         exit()
@@ -81,8 +81,8 @@ def load_byte(address):
 #    Raise a 'Segmentation fault' error if the address is outside
 #    the legal range for the memory
 def store_byte(byte, address):
-    if address >= Size or address < 0:
-        print("Seg fault")
+    if address >= Data or address < 0:
+        print("Seg fault: improper access at address {}".format(address))
         return None
     else:
         Memory[address] = (byte % 256)
@@ -577,6 +577,8 @@ def execute(state):
         memvar = (sp, 'uint16')
         pc = get_var(memvar)
         sp = sp + 2
+    elif opcode == "dump":
+        show_memory("DUMP")
     elif opcode == "bash":
         print("admin$")
         pc = -1
