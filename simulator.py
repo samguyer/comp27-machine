@@ -12,6 +12,7 @@ ShowMemory = True
 Size = 350
 Text = 10
 Data = 200
+Variables = 300
 Stack = 350
 Memory = [0 for _ in range(Size)]
 
@@ -45,6 +46,12 @@ def show_memory(when):
     for i in range(0, len(Memory), 10):
         line = ''
         chars = ''
+        if i == Text:
+            print("PROGRAM (text):")
+        if i == Data:
+            print("STRINGS (data):")
+        if i == Variables:
+            print("VARIABLES (heap/stack):")
         for j in range(10):
             b = Memory[i + j]
             line = line + as_binary(b) + ' '
