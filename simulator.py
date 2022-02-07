@@ -307,8 +307,8 @@ def load(dest, ptr, typ):
 #    op2 is a variable whose value will be used as an address
 #    (often called a "pointer"). This instruction takes the
 #    value from op1 and stores it at the address in ptr
-def store(op1, ptr, typ):
-    val = get_var(op1)
+def store(val, ptr, typ):
+    val = get_var(val)
     address = get_var(ptr)
     memvar = (address, typ)
     set_var(memvar, val)
@@ -361,6 +361,11 @@ def make_operand(pc, sp, typ):
     elif opstr[0] == '@':
         address = int(opstr[1:])
         return ((address, typ), pc)
+    elif opstr[0] == '*':
+        ptraddress = int(opstr[1:])
+        ptr = (ptraddress, 'uint16')
+        address = get_var(ptr)
+        return ((address, typ), pc)
     elif opstr.startswith('s+'):
         address = int(opstr[2:]) + sp
         return ((address, typ), pc)
@@ -371,6 +376,10 @@ def make_operand(pc, sp, typ):
 
 def execute(state):
     (pc, sp, cflag) = state
+    if load_byte(pc) == 0:
+        print("Abnormal exit: null instruction at {}".format(pc))
+        pc = -1
+        return (pc, sp, cflag)
     (opcode, pc) = read4(pc)
     if ShowSteps:
         print('PC: {:3d}  SP: {:3d}  OP: {}  cflag: {}'.format(pc, sp, opcode, cflag))
@@ -380,6 +389,14 @@ def execute(state):
         (dest, pc) = make_operand(pc, sp, 'uint8')
         (src, pc) = make_operand(pc, sp, 'uint8')
         mov(dest, src)
+    elif opcode == 'ld_b':
+        (dest, pc) = make_operand(pc, sp, 'uint8')
+        (ptr, pc) = make_operand(pc, sp, 'uint16')
+        load(dest, ptr, 'uint8')
+    elif opcode == 'st_b':
+        (ptr, pc) = make_operand(pc, sp, 'uint16')
+        (src, pc) = make_operand(pc, sp, 'uint8')
+        store(src, ptr, 'uint8')
     elif opcode == 'movw':
         (dest, pc) = make_operand(pc, sp, 'uint16')
         (src, pc) = make_operand(pc, sp, 'uint16')
@@ -529,6 +546,14 @@ def execute(state):
         v0 = input('?')
         v = do_escapes(v0)
         set_var(op, v)
+    elif opcode == 'putc':
+        (op, pc) = make_operand(pc, sp, 'uint8')
+        v = get_var(op)
+        print(chr(v))
+    elif opcode == 'getc':
+        (op, pc) = make_operand(pc, sp, 'uint8')
+        c = input('?')
+        set_var(op, ord(c[0]))
     elif opcode == 'call':
         (op, pc) = make_operand(pc, sp, 'uint16')
         sp = sp - 2
@@ -659,13 +684,21 @@ def load_program(instructions):
                     PC = storeN(opcode, 4, PC)
                     for o0 in operands:
                         o = o0.strip()
+                        indirect = False
+                        if o[0] == '(' and o[-1] == ')':
+                            indirect = True
+                            o = o.strip('()')
                         if o.startswith('#'):
                             val = int(o.strip('#'))
                             omem = '#{:03d}'.format(val)
                             PC = storeN(omem, 4, PC)
                         elif o.startswith('@'):
-                                val = int(o.strip('@'))
-                                omem = '@{:03d}'.format(val)
+                                val = int(o[1:])
+                                if indirect:
+                                    mode = '*'
+                                else:
+                                    mode = '@'
+                                omem = '{}{:03d}'.format(mode, val)
                                 PC = storeN(omem, 4, PC)
                         elif o in datamap:
                             (content, address) = datamap[o]
