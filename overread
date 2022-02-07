@@ -1,0 +1,29 @@
+#  Memory layout:
+#    Address 300: size of data
+#    Address 302: pointer into data
+#    Address 304: current character to print
+#    Address 310 holds data to echo
+#    Address 320 holds secret data
+start:
+  movb @320, #83
+  movb @321, #51
+  movb @322, #99
+  movb @323, #114
+  movb @324, #101
+  movb @325, #116
+
+  puts "Enter string to echo:"
+  gets @310
+  puts "Enter size:"
+  getw @300
+  # -- Pointer to first char of data to echo
+  movw @302, #310
+loop:
+  movb @304, (@302)
+  putc @304
+  addw @302, @302, #1
+  subw @300, @300, #1
+  cmpw @300, #0
+  j_gt loop
+end:
+  exit
