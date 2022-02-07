@@ -68,7 +68,7 @@ def show_memory(when):
 #    Raise a 'Segmentation fault' error if the address is outside
 #    the legal range for the memory
 def load_byte(address):
-    if address >= Data or address < 0:
+    if address >= Size or address < 0:
         print("Seg fault: improper access at address {}".format(address))
         show_memory("at error")
         exit()
@@ -81,7 +81,7 @@ def load_byte(address):
 #    Raise a 'Segmentation fault' error if the address is outside
 #    the legal range for the memory
 def store_byte(byte, address):
-    if address >= Data or address < 0:
+    if address >= Size or address < 0:
         print("Seg fault: improper access at address {}".format(address))
         return None
     else:
