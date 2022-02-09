@@ -702,19 +702,24 @@ def load_program(instructions):
                             omem = '#{:03d}'.format(val)
                             PC = storeN(omem, 4, PC)
                         elif o.startswith('@'):
-                                val = int(o[1:])
-                                if indirect:
-                                    mode = '*'
-                                else:
-                                    mode = '@'
-                                omem = '{}{:03d}'.format(mode, val)
-                                PC = storeN(omem, 4, PC)
+                            val = int(o[1:])
+                            if indirect:
+                                mode = '*'
+                            else:
+                                mode = '@'
+                            omem = '{}{:03d}'.format(mode, val)
+                            PC = storeN(omem, 4, PC)
+                        elif o.startswith('s+'):
+                            offset = int(o[2:])
+                            omem = 's+{:02d}'.format(offset)
+                            PC = storeN(omem, 4, PC)
                         elif o in datamap:
                             (content, address) = datamap[o]
                             omem = '@{:03d}'.format(address)
                             PC = storeN(omem, 4, PC)
-                        elif o in varmap:
-                            offset = varmap[o]
+                        elif o.startswith('$'):
+                            varname = o[1:]
+                            offset = varmap[varname]
                             omem = 's+{:02d}'.format(offset)
                             PC = storeN(omem, 4, PC)
                         else:
