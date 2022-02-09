@@ -12,7 +12,7 @@ ShowMemory = False
 Size = 500
 Text = 10
 Variables = 300
-Stack = 350
+Stack = 399
 Data = 400
 Memory = [0 for _ in range(Size)]
 
@@ -567,17 +567,46 @@ def execute(state):
         memvar = (sp, 'uint16')
         set_var(memvar, pc)
         (pc, _) = op
-    elif opcode == 'push':
+    elif opcode == 'pshb':
+        (op, pc) = make_operand(pc, sp, 'uint8')
+        v = get_var(op)
+        sp = sp - 1
+        stackvar = (sp, 'uint8')
+        set_var(stackvar, v)
+    elif opcode == 'popb':
+        (op, pc) = make_operand(pc, sp, 'uint8')
+        stackvar = (sp, 'uint8')
+        v = get_var(stackvar)
+        set_var(op, v)
+        sp = sp + 1
+    elif opcode == 'pshw':
         (op, pc) = make_operand(pc, sp, 'uint16')
-        sp = sp - op
-    elif opcode == 'pop ':
+        v = get_var(op)
+        sp = sp - 2
+        stackvar = (sp, 'uint16')
+        set_var(stackvar, v)
+    elif opcode == 'popw':
         (op, pc) = make_operand(pc, sp, 'uint16')
-        sp = sp + op
+        stackvar = (sp, 'uint16')
+        v = get_var(stackvar)
+        set_var(op, v)
+        sp = sp + 2
+    elif opcode == 'pshn':
+        (op, pc) = make_operand(pc, sp, 'uint16')
+        v = get_var(op)
+        sp = sp - v
+    elif opcode == 'popn':
+        (op, pc) = make_operand(pc, sp, 'uint16')
+        v = get_var(op)
+        sp = sp + v
     elif opcode == 'retn':
         memvar = (sp, 'uint16')
         pc = get_var(memvar)
         sp = sp + 2
     elif opcode == "dump":
+        print("MACHINE STATE:")
+        print("  PC = {}".format(pc))
+        print("  SP = {}".format(sp))
         show_memory("DUMP")
     elif opcode == "bash":
         print("admin$")
@@ -675,12 +704,12 @@ def load_program(instructions):
                     # -- Leave room for the stack space offset. We won't know this
                     #    value until we get to the exit
                     enteraddress = PC+4
-                    PC = storeN('push____', 8, PC)
+                    PC = storeN('pshn____', 8, PC)
                 elif opcode == 'leave':
                     # -- Back patch the stack size to the enter instruction
                     if enteraddress != 0:
                         omem = '#{:03d}'.format(stackoffset)
-                        PC = storeN('pop ', 4, PC)
+                        PC = storeN('popn', 4, PC)
                         PC = storeN(omem, 4, PC)
                         storeN(omem, 4, enteraddress)
                 elif opcode == 'return':
@@ -749,7 +778,7 @@ def load_program(instructions):
     if 'start' in labelmap:
         start = labelmap['start']
 
-    return (start, Size, 0)
+    return (start, Stack, 0)
 
 
 def run(fn):
