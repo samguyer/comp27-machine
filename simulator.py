@@ -12,7 +12,7 @@ ShowMemory = False
 Size = 500
 Text = 10
 Variables = 300
-Stack = 399
+Stack = 400
 Data = 400
 Memory = [0 for _ in range(Size)]
 
@@ -573,11 +573,13 @@ def execute(state):
         sp = sp - 1
         stackvar = (sp, 'uint8')
         set_var(stackvar, v)
-    elif opcode == 'popb':
+    elif opcode == 'topb':
         (op, pc) = make_operand(pc, sp, 'uint8')
         stackvar = (sp, 'uint8')
         v = get_var(stackvar)
         set_var(op, v)
+        sp = sp + 1
+    elif opcode == 'popb':
         sp = sp + 1
     elif opcode == 'pshw':
         (op, pc) = make_operand(pc, sp, 'uint16')
@@ -585,11 +587,13 @@ def execute(state):
         sp = sp - 2
         stackvar = (sp, 'uint16')
         set_var(stackvar, v)
-    elif opcode == 'popw':
+    elif opcode == 'topw':
         (op, pc) = make_operand(pc, sp, 'uint16')
         stackvar = (sp, 'uint16')
         v = get_var(stackvar)
         set_var(op, v)
+        sp = sp + 2
+    elif opcode == 'popw':
         sp = sp + 2
     elif opcode == 'pshn':
         (op, pc) = make_operand(pc, sp, 'uint16')
