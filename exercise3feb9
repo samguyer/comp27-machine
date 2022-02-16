@@ -1,0 +1,18 @@
+start:
+  puts "Enter a string:"
+  gets @340
+  movw @300, #340
+  movw @302, #320
+loop:
+  movb (@302), (@300)
+  putc (@300)
+  putw @300
+  addw @300, @300, #1
+  addw @302, @302, #1
+  cmpb (@300), #0
+  j_ne loop
+  movb (@302), #0
+  puts @340
+  puts @320
+  dump
+  exit

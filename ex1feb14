@@ -1,0 +1,14 @@
+start:
+  pshn #10
+  call check
+  exit
+
+check:
+  pshb #0
+  pshn #10
+  puts "Enter password:"
+  gets s+0
+  dump
+  popn #10
+  popb
+  retn

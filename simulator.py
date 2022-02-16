@@ -12,8 +12,8 @@ ShowMemory = False
 Size = 500
 Text = 10
 Variables = 300
-Stack = 400
-Data = 400
+Stack = 380
+Data = 380
 Memory = [0 for _ in range(Size)]
 
 

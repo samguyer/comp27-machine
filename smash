@@ -1,0 +1,30 @@
+start:
+  # -- Make room for return value (true or false)
+  pshb #0
+  # -- Call checkpassword function
+  call checkpassword
+  cmpb s+0, #1
+  j_ne wrong
+  puts "Correct"
+  jump end
+wrong:
+  puts "Incorrect"
+end:
+  exit
+
+checkpassword:
+  # -- Make room on stack for 10 byte buffer
+  #    Address will be SP+0
+  pshn #10
+  # -- Read user input into buffer
+  puts "Enter password:"
+  gets s+0
+  # -- Check for correct password
+  cmps s+0, "S3cret!"
+  j_ne done
+  # -- Return true by storing 1 in return value position
+  movb s+12, #1
+done:
+  # -- Clean up the stack and return
+  popn #10
+  retn
