@@ -41,7 +41,7 @@ def as_binary(byte):
 #    Display all the bits in memory. This format prints the
 #    bytes in order, with four bytes (32 bits) on each line
 #    The column at the left side shows the address.
-def show_memory(when):
+def show_memory(when, SP, PC):
     print("MEMORY {}:".format(when))
     for i in range(0, len(Memory), 10):
         line = ''
@@ -54,11 +54,14 @@ def show_memory(when):
             print("VARIABLES (heap/stack):")
         for j in range(10):
             b = Memory[i + j]
-            line = line + as_binary(b) + ' '
+            sep = ' '
+            if i+j == SP or i+j == PC:
+                sep = '>'
+            line = line + sep + as_binary(b)
             if b >= 32 and b <= 126:
-                chars = chars + chr(b) + ' '
+                chars = chars + sep + chr(b)
             else:
-                chars = chars + '. '
+                chars = chars + sep + '. '
         print('{:3d}  {}  {}'.format(i, line, chars))
 
 
@@ -611,7 +614,7 @@ def execute(state):
         print("MACHINE STATE:")
         print("  PC = {}".format(pc))
         print("  SP = {}".format(sp))
-        show_memory("DUMP")
+        show_memory("DUMP", sp, pc)
     elif opcode == "bash":
         print("admin$")
         pc = -1
