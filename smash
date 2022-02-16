@@ -13,9 +13,9 @@ end:
   exit
 
 checkpassword:
-  # -- Make room on stack for 10 byte buffer
+  # -- Make room on stack for 16 byte buffer
   #    Address will be SP+0
-  pshn #10
+  pshn #16
   # -- Read user input into buffer
   puts "Enter password:"
   gets s+0
@@ -23,8 +23,8 @@ checkpassword:
   cmps s+0, "S3cret!"
   j_ne done
   # -- Return true by storing 1 in return value position
-  movb s+12, #1
+  movb s+18, #1
 done:
   # -- Clean up the stack and return
-  popn #10
+  popn #16
   retn

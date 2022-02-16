@@ -618,7 +618,8 @@ def execute(state):
     elif opcode == 'exit':
         pc = -1
     else:
-        print('ERROR: malformed instruction at PC={} opcode {}'.format(pc, opcode))
+        print('ERROR: malformed instruction at PC={} opcode: {}'.format(pc, opcode))
+        pc = -1
 
     return (pc, sp, cflag)
 
