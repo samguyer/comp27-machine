@@ -1,0 +1,55 @@
+start:
+  # -- Secret key (@300)
+  movb @450, #42
+  # -- Debug mode (SP+2)
+  pshb #0
+  # -- Choice (SP+0)
+  pshn #2
+  puts "Enter 'E' for encrypt, 'D' for decrypt"
+  gets S+0
+  cmpb S+0, #69
+  j_eq do_encrypt
+  cmpb S+0, #68
+  j_eq do_decrypt
+  puts "Invalid choice"
+  jump end1
+do_encrypt:
+  call encrypt
+  jump end1
+do_decrypt:
+  call decrypt
+  jump end1
+end1:
+  cmpb S+2, #0
+  j_eq end2
+  puts "SECRET KEY:"
+  putb @450
+end2:
+  exit
+
+encrypt:
+  pshw #0
+  pshn #8
+  putb S+10
+  puts "Enter 2 char phrase:"
+  gets S+0
+  movw S+8, S+0
+  addb S+8, S+8, @450
+  addb S+9, S+9, @450
+  puts "Result:"
+  putw S+8
+  popn #10
+  retn
+
+decrypt:
+  pshw #0
+  pshn #3
+  puts "Enter cyphertext:"
+  getw S+3
+  movw S+0, S+3
+  subb S+0, S+0, @450
+  subb S+1, S+1, @450
+  puts "Result:"
+  puts S+0
+  popn #5
+  retn

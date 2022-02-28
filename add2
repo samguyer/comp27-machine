@@ -1,0 +1,38 @@
+# Main code layout
+#   "x" at SP+0
+#   "y" at SP+2
+#   "result" at SP+4
+start:
+  pshw #0
+  pshw #0
+  pshw #0
+  puts "Enter x value:"
+  getw s+0
+  puts "Enter y value:"
+  getw s+2
+  # -- Push arguments on stack
+  pshw s+0
+  pshw s+2
+  # -- Call the function
+  call add2
+  # -- Clean up the stack
+  popw
+  popw
+  exit
+
+add2:
+  # -- Make space for result (SP+0)
+  pshw #0
+  # -- Add the two parameters
+  #    They are now at SP+4 and SP+6
+  dump
+  putw s+4
+  putw s+6
+  addw s+0, s+4, s+6
+  puts "Result:"
+  putw s+0
+  # -- Clean up stack frame
+  popw
+  retn
+
+

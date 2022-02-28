@@ -19,6 +19,7 @@ checkpassword:
   # -- Read user input into buffer
   puts "Enter password:"
   gets s+0
+  dump
   # -- Check for correct password
   cmps s+0, "S3cret!"
   j_ne done

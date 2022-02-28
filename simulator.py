@@ -9,11 +9,11 @@ ShowMemory = False
 # -- Memory representation
 #    Memory is a sequence of bytes. The address of a byte is its
 #    index in that sequence. That's it!
-Size = 500
+Size = 800
 Text = 10
-Variables = 300
-Stack = 380
-Data = 380
+Variables = 450
+Stack = 600
+Data = 600
 Memory = [0 for _ in range(Size)]
 
 
@@ -61,7 +61,7 @@ def show_memory(when, SP, PC):
             if b >= 32 and b <= 126:
                 chars = chars + sep + chr(b)
             else:
-                chars = chars + sep + '. '
+                chars = chars + sep + '.'
         print('{:3d}  {}  {}'.format(i, line, chars))
 
 
@@ -73,7 +73,7 @@ def show_memory(when, SP, PC):
 def load_byte(address):
     if address >= Size or address < 0:
         print("Seg fault: improper access at address {}".format(address))
-        show_memory("at error")
+        show_memory("at error", 0, 0)
         exit()
         #return None
     else:
@@ -329,8 +329,9 @@ def do_escapes(s0):
     i = 0
     while i < len(s0):
         if s0[i] == '\\':
-            s = s + chr(int(s0[i+1]))
-            i = i + 2
+            v = int(s0[i+1:i+4])
+            s = s + chr(v)
+            i = i + 4
         else:
             s = s + s0[i]
             i = i + 1
@@ -746,7 +747,7 @@ def load_program(instructions):
                                 mode = '@'
                             omem = '{}{:03d}'.format(mode, val)
                             PC = storeN(omem, 4, PC)
-                        elif o.startswith('s+'):
+                        elif o.startswith('s+') or o.startswith('S+'):
                             offset = int(o[2:])
                             omem = 's+{:02d}'.format(offset)
                             PC = storeN(omem, 4, PC)
