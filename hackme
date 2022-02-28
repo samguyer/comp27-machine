@@ -1,55 +1,74 @@
 start:
-  # -- Secret key (@300)
+  # -- Secret key (stored at address @450)
   movb @450, #42
-  # -- Debug mode (SP+2)
+  # -- Debug mode (one byte on stack at SP+2)
   pshb #0
-  # -- Choice (SP+0)
+  # -- Choice (two character buffer on stack at SP+0)
   pshn #2
+  # -- Get user's choice
   puts "Enter 'E' for encrypt, 'D' for decrypt"
   gets S+0
+  # -- Compare first char to 'E'
   cmpb S+0, #69
   j_eq do_encrypt
+  # -- Compare to 'D'
   cmpb S+0, #68
   j_eq do_decrypt
+  # -- User entered something else
   puts "Invalid choice"
   jump end1
 do_encrypt:
+  # -- Call encrypt function
   call encrypt
   jump end1
 do_decrypt:
+  # -- Call decrypt function
   call decrypt
   jump end1
 end1:
-  cmpb S+2, #0
-  j_eq end2
+  # -- Check debug flag
+  cmpb S+2, #1
+  j_ne end2
+  # -- Debug is on, print the secret key
   puts "SECRET KEY:"
   putb @450
 end2:
   exit
 
 encrypt:
+  # -- Resulting cyphertext (2 byte int on stack at SP+8)
   pshw #0
+  # -- Buffer for user input (8 bytes on stack at SP+0)
   pshn #8
-  putb S+10
+  # -- Get input plain text
   puts "Enter 2 char phrase:"
   gets S+0
+  # -- Apply the crypto algorithm :-)
+  #    Notice that @450 is the private key
   movw S+8, S+0
   addb S+8, S+8, @450
   addb S+9, S+9, @450
+  # -- Print result
   puts "Result:"
   putw S+8
+  # -- Pop local variables off stack
   popn #10
   retn
 
 decrypt:
+  # -- Input cyphertext (2 byte int on stack at SP+8)
   pshw #0
+  # -- Output decrypted text (3 bytes on stack at SP+0)
   pshn #3
+  # -- Get cyphertext value from user
   puts "Enter cyphertext:"
   getw S+3
+  # -- Decrypt
   movw S+0, S+3
   subb S+0, S+0, @450
   subb S+1, S+1, @450
   puts "Result:"
   puts S+0
+  # -- Clean up the stack
   popn #5
   retn
